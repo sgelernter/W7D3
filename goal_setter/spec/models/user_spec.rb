@@ -25,8 +25,17 @@ RSpec.describe User, type: :model do
     end
 
     describe "#reset_session_token!" do
-        it "should assign a new session token to the user"
-        it "should return the new session token"
+    it "should assign a new session token to the user" do
+            old_token = user_2.session_token
+            user_2.reset_session_token!
+            expect(user_2.session_token).to_not eq(old_token)
+        end
+
+        it "should return the new session token" do
+            new_token = user_2.reset_session_token!
+            expect(user_2.session_token).to eq(new_token)
+        end
+
     end
 
     describe "#is_password?()" do 
