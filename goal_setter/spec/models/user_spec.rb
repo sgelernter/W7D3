@@ -16,12 +16,18 @@ RSpec.describe User, type: :model do
         end
         it { should validate_uniqueness_of(:username) }
         it { should validate_uniqueness_of(:session_token) }
-        # it { should validate_length_of(:password) }
+        it { should validate_length_of(:password) }
     end
 
     describe "User::find_by_credentials" do 
-        it "should return correct user by given credentials" 
-        it "should return nil if user if not found"
+        it "should return correct user by given credentials" do 
+            tom = user_2
+            expect(User.find_by_credentials('tom', 'hunter12')).to eq(tom)
+        end
+        
+        it "should return nil if user if not found" do 
+            expect(User.find_by_credentials('tom', '')).to be nil 
+        end
     end
 
     describe "#reset_session_token!" do
