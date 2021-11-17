@@ -10,9 +10,10 @@ RSpec.describe UsersController, type: :controller do
     end
 
     describe "GET #show" do
+        testboy = User.create(username: Faker::Name.name, password: 'testing')
         it "renders user for given id" do 
-            get :show
-            expect(response).to render_template(:show)
+            get :show, {params: {id: testboy.id}} 
+            expect(response).to redirect_to(user_url(testboy.id))
         end
     end
 
@@ -24,22 +25,20 @@ RSpec.describe UsersController, type: :controller do
     end
 
     describe "GET #edit" do
+        testboy = User.create(username: Faker::Name.name, password: 'testing')
         it "should show user edit form" do
-            get :edit
-            expect(response).to render_template(:edit)
+            get :edit, {params: {id: testboy.id}} 
+            expect(response).to redirect_to(edit_user_url(testboy.id))
         end
     end
 
     describe "POST #create" do
         
         context "with valid user info" do
-            # before :each do
-            #     create(:user)
-            # end
-            let(:params){{user:{username: "tim", password: "hunter12"}}}
             it "should save user to database" do
-                post :create, params
-                expect(User.last.username).to eq("tim")
+                random_name = Faker::Name.name
+                post :create, {params: {username: random_name, password: 'testing'}}
+                expect(User.find_by(username: random_name)).to_not be nil 
             end
 
             it "should log user in"
