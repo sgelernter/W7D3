@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
 
+    subject(:user_2) { User.create(username: 'tom', password: 'hunter12') }
     
     describe "Presence" do
         it { should validate_presence_of(:username) }
@@ -28,13 +29,18 @@ RSpec.describe User, type: :model do
         it "should return the new session token"
     end
 
-    describe "#is_password?" do 
-        it "should use BCrypt to check if given passsword matches password_digest"
+    describe "#is_password?()" do 
+        it "should use BCrypt to check if given passsword matches password_digest" do 
+            expect(BCrypt::Password.new(user_2.password_digest).is_password?('hunter12')).to be true
+        end
     end
+    
+    describe "#password=" do
 
-    describe "#password_ecription" do
-        it "should use BCrypt to generate a password digest"
-        it "should save ecrypted password to password_digest"
+        it "should use BCrypt to generate a password_digest" do
+            expect(BCrypt::Password).to receive(:create).with('hello')
+            User.create(username: 'bob', password: 'hello')
+        end
     end
 
 end
